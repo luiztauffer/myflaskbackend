@@ -20,6 +20,14 @@ class RootDir(Resource):
         return jsonify({'my_root_resource': "root node"})
 
 
+class MultiplicateData(Resource):
+    def get(self):
+        data = request.form.to_dict(flat=False)
+        print(data)
+        # print('result: ', num*10)
+        # return {'result': num*10, 'another_key': 'javaporco'}
+
+
 class PlotDataPoint(Resource):
     def __init__(self):
         super().__init__()
@@ -57,15 +65,6 @@ class StoreCsvData(Resource):
     def allowed_file(self, filename):
         is_allowed = '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_DATA_EXTENSIONS
         return is_allowed
-
-
-class MultiplicateData(Resource):
-    def get(self, num):
-        print('result: ', num*10)
-        return {'result': num*10, 'another_key': 'javaporco'}
-
-    def post(self, num):
-        return {'result': num*10}, 201
 
 
 api.add_resource(RootDir, '/')
