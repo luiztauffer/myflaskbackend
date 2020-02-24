@@ -13,6 +13,8 @@ def client():
         #     flaskr.init_db()
         yield client
     # Anything after yield will be executed at the end of tests
+    # close processes...
+    #delete temporary files...
 
 
 def test_get_root_dir(client):

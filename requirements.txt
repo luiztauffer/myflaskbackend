@@ -3,3 +3,4 @@ pandas
 Flask-RESTful
 matplotlib
 mpld3
+ipywidgets
