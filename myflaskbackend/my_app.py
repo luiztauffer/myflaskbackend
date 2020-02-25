@@ -4,6 +4,12 @@ from flask_restful import Resource, Api
 from myflaskbackend.resources.data import StoreCsvData
 from myflaskbackend.resources.figures import PlotDataPoint
 
+api_settings = {
+    'RUNNING_LOCATION': "local",  # ['local', 'remote']
+    'MONGOD_EXEC_PATH': "C:\\Program Files\\MongoDB\\Server\\4.2\\bin\\mongod.exe",
+    'MONGO_DB_PATH': "C:\\Users\\Luiz\\Desktop\\mymongodb",
+    'DB_IS_RUNNING': False,
+}
 
 app = Flask(__name__)
 api = Api(app)

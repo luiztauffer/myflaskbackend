@@ -46,4 +46,7 @@ setup(
     url='https://github.com/luiztauffer/myflaskbackend',
     version='0.1.0',
     zip_safe=False,
+    entry_points={
+        'console_scripts': ['myflaskbackend=myflaskbackend.command_line:main'],
+    }
 )

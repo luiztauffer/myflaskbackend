@@ -24,3 +24,9 @@ def test_get_root_dir(client):
     data_json = json.loads(data_string)
 
     assert data_json['my_root_resource'] == "root node"
+
+
+def upload_csv_file(client):
+    """POST csv file to backend"""
+    file = '/data_tests/dummy_data.csv'
+    client.post('/storecsvdata')
