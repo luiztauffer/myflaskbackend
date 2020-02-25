@@ -1,7 +1,7 @@
 from flask import request
 from flask_restful import Resource
 #from myflaskbackend.my_app import api_settings
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 from pathlib import Path
 
 
@@ -20,7 +20,7 @@ class StoreCsvData(Resource):
     POST to this recource to save a CSV file in the server.
 
     Test from command line:
-    $ curl -i -X POST -F "client_data=@example.csv" http://localhost:5000/storecsvdata
+    $ curl -i -X POST -F "client_file=@example.csv" http://localhost:5000/storecsvdata
     """
     def __init__(self):
         self.resource_name = 'store_csv_file'
@@ -30,13 +30,13 @@ class StoreCsvData(Resource):
             self.base_dir = Path('')
 
     def post(self):
-        f = request.files['client_data']
+        f = request.files['client_file']
         # Test if file type is allowed
         if not self.allowed_file(f.filename):
             return "File extension not allowed. Currently allowed file extensions are: " + ", ".join(ALLOWED_DATA_EXTENSIONS)
 
         # Save file on base_dir
-        f.save(str(self.base_dir / f.filename))
+        f.save(str(self.base_dir / secure_filename(f.filename)))
         msg = f"File '{f.filename}' stored in directory {self.base_dir}"
         return msg
 

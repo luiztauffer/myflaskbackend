@@ -1,14 +1,15 @@
-from myflaskbackend import myflaskbackend
+from myflaskbackend import my_app
 import pytest
 import json
+from pathlib import Path
 import os
 
 
 # fixture function to only be invoked once per test module (the default is to invoke once per test function)
 @pytest.fixture(scope='module')
 def client():
-    myflaskbackend.app.config['TESTING'] = True
-    with myflaskbackend.app.test_client() as client:
+    my_app.app.config['TESTING'] = True
+    with my_app.app.test_client() as client:
         # with flaskr.app.app_context():
         #     flaskr.init_db()
         yield client
@@ -26,7 +27,16 @@ def test_get_root_dir(client):
     assert data_json['my_root_resource'] == "root node"
 
 
-def upload_csv_file(client):
+# The request fixture is a special fixture providing information of the requesting test function
+def test_upload_csv_file(client, request):
     """POST csv file to backend"""
-    file = '/data_tests/dummy_data.csv'
-    client.post('/storecsvdata')
+    file_path = Path(request.fspath).parent / 'data_tests/dummy_data.csv'
+    with open(str(file_path), 'rb') as f:
+        rv = client.post(
+            '/storecsvdata',
+            data={'client_file': f},
+        )
+
+    assert 'dummy_data.csv' in rv.data.decode()
+    assert rv.status == "200 OK"
+    assert rv.status_code == 200
