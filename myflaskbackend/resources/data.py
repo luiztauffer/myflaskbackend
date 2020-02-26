@@ -25,14 +25,11 @@ class UploadCsvFile(Resource):
     def post(self):
         f = request.files['client_file']
         # Test if file type is allowed
-        if not self.allowed_file(f.filename):
+        file_name = Path(f.filename).name
+        if not self.allowed_file(file_name):
             return "File extension not allowed. Currently allowed file extensions are: " + ", ".join(ALLOWED_DATA_EXTENSIONS)
-
         # Save file on base_dir
-        print(self.base_dir)
-        print(f.filename)
-        print(secure_filename(f.filename))
-        f.save(str(self.base_dir / secure_filename(f.filename)))
+        f.save(str(self.base_dir / secure_filename(file_name)))
         msg = f"File '{f.filename}' stored in directory {self.base_dir}"
         return msg
 
