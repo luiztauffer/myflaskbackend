@@ -1,18 +1,32 @@
 from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
+from flask_pymongo import PyMongo
+# from flask_mongoengine import MongoEngine
 
-from myflaskbackend.resources.data import StoreCsvData
+from myflaskbackend.resources.data import UploadCsvFile
 from myflaskbackend.resources.figures import PlotDataPoint
+from myflaskbackend.utils.configurations import api_settings
 
-api_settings = {
-    'RUNNING_LOCATION': "local",  # ['local', 'remote']
-    'MONGOD_EXEC_PATH': "C:\\Program Files\\MongoDB\\Server\\4.2\\bin\\mongod.exe",
-    'MONGO_DB_PATH': "C:\\Users\\Luiz\\Desktop\\mymongodb",
-    'DB_IS_RUNNING': False,
-}
+import threading
+import os
+
 
 app = Flask(__name__)
+# app.config.from_pyfile('the-config.cfg')
+# mongo = PyMongo(app)
+# mongo = MongoEngine(app)
 api = Api(app)
+
+# # This will run at the start of Flask application
+# with app.app_context():
+#     # Runs MongoDB on a separate Thread
+#     def thread_function(dbpath):
+#         os.system('mongod ' + '--dbpath ' + '"' + dbpath + '"')
+#
+#     mongo_thread = threading.Thread(target=thread_function, args=(api_settings['MONGO_DB_PATH'], ), daemon=True)
+#     print("Main    : before running thread")
+#     mongo_thread.start()
+#     print("Main    : wait for the thread to finish")
 
 
 class RootDir(Resource):
@@ -30,7 +44,7 @@ class MultiplicateData(Resource):
 
 api.add_resource(RootDir, '/')
 api.add_resource(PlotDataPoint, '/plotdatapoint/<int:num>')
-api.add_resource(StoreCsvData, '/storecsvdata')
+api.add_resource(UploadCsvFile, '/uploadcsvfile')
 api.add_resource(MultiplicateData, '/multiplicate/<int:num>')
 
 

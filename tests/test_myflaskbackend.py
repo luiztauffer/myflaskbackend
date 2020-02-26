@@ -33,10 +33,10 @@ def test_upload_csv_file(client, request):
     file_path = Path(request.fspath).parent / 'data_tests/dummy_data.csv'
     with open(str(file_path), 'rb') as f:
         rv = client.post(
-            '/storecsvdata',
+            '/uploadcsvfile',
             data={'client_file': f},
         )
 
-    assert 'dummy_data.csv' in rv.data.decode()
     assert rv.status == "200 OK"
     assert rv.status_code == 200
+    assert 'dummy_data.csv' in rv.data.decode()

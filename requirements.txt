@@ -4,3 +4,4 @@ Flask-RESTful
 matplotlib
 mpld3
 ipywidgets
+Flask-PyMongo

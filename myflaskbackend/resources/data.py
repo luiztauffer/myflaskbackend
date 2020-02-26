@@ -1,26 +1,19 @@
 from flask import request
 from flask_restful import Resource
-#from myflaskbackend.my_app import api_settings
+from myflaskbackend.utils.configurations import api_settings
 from werkzeug.utils import secure_filename
 from pathlib import Path
 
 
-api_settings = {
-    'RUNNING_LOCATION': "local",  # ['local', 'remote']
-    'MONGOD_EXEC_PATH': "C:\\Program Files\\MongoDB\\Server\\4.2\\bin\\mongod.exe",
-    'MONGO_DB_PATH': "C:\\Users\\Luiz\\Desktop\\mymongodb",
-    'DB_IS_RUNNING': False,
-}
-
 ALLOWED_DATA_EXTENSIONS = ['csv']
 
 
-class StoreCsvData(Resource):
+class UploadCsvFile(Resource):
     """
-    POST to this recource to save a CSV file in the server.
+    POST to this resource to upload a CSV file to the server.
 
     Test from command line:
-    $ curl -i -X POST -F "client_file=@example.csv" http://localhost:5000/storecsvdata
+    $ curl -i -X POST -F "client_file=@example.csv" http://localhost:5000/uploadcsvfile
     """
     def __init__(self):
         self.resource_name = 'store_csv_file'
