@@ -3,9 +3,28 @@ from flask_restful import Resource
 from myflaskbackend.utils.configurations import api_settings
 from werkzeug.utils import secure_filename
 from pathlib import Path
-
+import pymongo
 
 ALLOWED_DATA_EXTENSIONS = ['csv']
+
+
+class ConnectToDb(Resource):
+    """
+    POST to this resource to connect to Mongodb database.
+
+    $ curl -i -X POST -F -d "username=value1&password=value2" http://localhost:5000/connecttodb
+    """
+    def post(self):
+        form = request.form
+        auth_msg = 'mongodb+srv://' + str(form['username']) + ':' + str(form['password']) + '@cluster0-sahac.mongodb.net/test?retryWrites=true&w=majority'
+        client = pymongo.MongoClient(auth_msg)
+        db = client.test_database
+        collections_list = db.list_collection_names()
+        birds = db.birds
+
+        print(f'Connected to database: {db.name}')
+        print(f'{db.name} has the following collections: {collections_list}')
+        print(f'In birds collection, there is this entry: {birds.find_one()}')
 
 
 class UploadCsvFile(Resource):

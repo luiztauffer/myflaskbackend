@@ -103,3 +103,6 @@ ENV/
 
 # IDE settings
 .vscode/
+
+# App Users data
+users_data.json
