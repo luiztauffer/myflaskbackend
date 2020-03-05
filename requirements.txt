@@ -1,7 +1,10 @@
 numpy
-pandas
 Flask-RESTful
+flask-login
+flask-sqlalchemy
+Flask-PyMongo
+Flask-WTF
+pandas
 matplotlib
 mpld3
 ipywidgets
-Flask-PyMongo

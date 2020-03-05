@@ -1,6 +1,6 @@
 from flask import request, current_app
 from flask_restful import Resource
-from myflaskbackend.utils.configurations import api_settings
+from flask_login import login_required
 from werkzeug.utils import secure_filename
 from pathlib import Path
 import pandas as pd
@@ -28,6 +28,8 @@ class ConnectToDb(Resource):
 
     $ curl -i -X POST -d "username=value1&password=value2" http://localhost:5000/connecttodb
     """
+    method_decorators = [login_required]
+
     def post(self):
         form = request.form
         auth_msg = 'mongodb+srv://' + str(form['username']) + ':' + str(form['password']) + '@cluster0-sahac.mongodb.net/test?retryWrites=true&w=majority'
@@ -55,12 +57,7 @@ class UploadCsvFile(Resource):
     Test from command line:
     $ curl -i -X POST -F "client_file=@example.csv" -F "collection_name=example" http://localhost:5000/uploadcsvfile
     """
-    def __init__(self):
-        self.resource_name = 'store_csv_file'
-        if api_settings['RUNNING_LOCATION'] == 'local':
-            self.base_dir = Path(api_settings['MONGO_DB_PATH'])
-        elif api_settings['RUNNING_LOCATION'] == 'remote':
-            self.base_dir = Path('')
+    method_decorators = [login_required]
 
     def post(self):
         collection_name = request.form['collection_name']
