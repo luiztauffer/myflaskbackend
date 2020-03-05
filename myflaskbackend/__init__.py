@@ -30,20 +30,20 @@ def create_app():
     # This will run at the start of Flask application
     with app.app_context():
         # Import resources
-        from myflaskbackend.resources.forms import RegistrationPage, LoginPage
         from myflaskbackend.resources.misc import MultiplicateData
         from myflaskbackend.resources.data import UploadCsvFile, ConnectToDb
-        from myflaskbackend.resources.auth import Login, Logout
+        from myflaskbackend.resources.auth import Login, Logout, Signup
         from myflaskbackend.resources.figures import PlotDataPoint
 
         # Set globally accessible values
         redis_store.app_config = app.config
 
         # Add some routes
-        api.add_resource(RootDir, '/')
-        api.add_resource(RegistrationPage, '/signup')
+        api.add_resource(HomeDir, '/', '/home')
+        api.add_resource(About, '/about')
+        api.add_resource(Signup, '/signup')
         api.add_resource(Login, '/login')
-        api.add_resource(Logout, '/logout')
+        # api.add_resource(Logout, '/logout')
         api.add_resource(PlotDataPoint, '/plotdatapoint/<int:num>')
         api.add_resource(ConnectToDb, '/connecttodb')
         api.add_resource(UploadCsvFile, '/uploadcsvfile')
@@ -67,7 +67,15 @@ def create_app():
     #     print("Main    : wait for the thread to finish")
 
 
-class RootDir(Resource):
+class HomeDir(Resource):
+    def get(self):
+        # redis_store = current_app.extensions['redis']
+        # print(f'Hi! Current app env is: {redis_store.app_config["ENV"]}')
+        headers = {'Content-Type': 'text/html'}
+        return make_response(render_template('home.html'), 200, headers)
+
+
+class About(Resource):
     def get(self):
         # redis_store = current_app.extensions['redis']
         # print(f'Hi! Current app env is: {redis_store.app_config["ENV"]}')

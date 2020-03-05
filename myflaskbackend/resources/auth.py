@@ -1,9 +1,53 @@
-from flask import request, make_response, current_app
+from flask import (request, make_response, current_app, render_template, flash,
+                   redirect)
 from flask_login import (login_required, logout_user, current_user, login_user,
                          UserMixin)
 from flask_restful import Resource
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired, Length, Email, EqualTo
+
 from werkzeug.security import generate_password_hash, check_password_hash
 from myflaskbackend import login_manager
+
+
+class RegistrationForm(FlaskForm):
+    username_validators = [DataRequired(), Length(min=4, max=20)]
+    username = StringField('Username', validators=username_validators)
+    email_validators = [DataRequired(), Email()]
+    email = StringField('Email', validators=email_validators)
+    password_validators = [DataRequired(), Length(min=4, max=20)]
+    password = PasswordField('Password', validators=password_validators)
+    confirm_password_validators = [DataRequired(), EqualTo('password')]
+    confirm_password = PasswordField('Confirm password', validators=confirm_password_validators)
+
+    submit = SubmitField('Sign up')
+
+
+class LoginForm(FlaskForm):
+    email_validators = [DataRequired(), Email()]
+    email = StringField('Email', validators=email_validators)
+    password_validators = [DataRequired(), Length(min=4, max=20)]
+    password = PasswordField('Password', validators=password_validators)
+
+    submit = SubmitField('Login')
+
+
+class Signup(Resource):
+    """
+    Signup for new users.
+    """
+    def get(self):
+        form = RegistrationForm()
+        headers = {'Content-Type': 'text/html'}
+        return make_response(render_template('signup.html', form=form), 200, headers)
+
+    def post(self):
+        form = request.form
+        username = form['username']
+        password = form['password']
+        flash(f'Account created for {username}', 'success')
+        return redirect('home')
 
 
 class Login(Resource):
@@ -12,6 +56,11 @@ class Login(Resource):
 
     $ curl -i -X POST -F -d "username=value1&password=value2" http://localhost:5000/login
     """
+    def get(self):
+        form = LoginForm()
+        headers = {'Content-Type': 'text/html'}
+        return make_response(render_template('login.html', form=form), 200, headers)
+
     def post(self):
         # Test if it is already logged in
         if current_user.is_authenticated:
